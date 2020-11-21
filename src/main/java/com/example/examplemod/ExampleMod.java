@@ -2,8 +2,10 @@ package com.example.examplemod;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
@@ -49,6 +51,13 @@ public class ExampleMod
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
+
+        // Get MC instance
+        Minecraft mc = Minecraft.getInstance();
+
+        // TODO: Replace font renderer with our own!
+        // TODO: Also replace whatever else so I can add tab completion.
+        System.out.println("Yo");
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
@@ -64,11 +73,22 @@ public class ExampleMod
                 map(m->m.getMessageSupplier().get()).
                 collect(Collectors.toList()));
     }
+
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
         // do something when the server starts
         LOGGER.info("HELLO from server starting");
+    }
+
+    @SubscribeEvent
+    public void pickupItem(EntityItemPickupEvent event) {
+        Minecraft minecraft = Minecraft.getInstance();
+
+        boolean isLogicalClient = minecraft.world.isRemote();
+
+        System.out.println("Item picked up!");
+
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
